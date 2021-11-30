@@ -1,14 +1,19 @@
 const User = require('../models/User')
+const {StatusCodes}= require('http-status-codes') ;
 const {BadRequestError, UnauthenticatedError} = require('../errors')
 
-const crmData = async(req,res) => {
-    res.json('crm data')
-}
+// const crmData = async(req,res) => {
+//     res.json('crm data')
+// }
 
 const crmRegister = async(req,res) => {
-        const user = await User.create(req.body);
-        res.status(201).json({user})
-        // console.log(user)
+        const{name,email,password} = req.body
+        if(!name || !email || !password){
+            throw new BadRequestError("Please provide infromation")
+        }
+        const user = await User.create({...req.body});
+        const token = user.createJwt()
+        res.status(StatusCodes.CREATED).json({user:{name:user.name}, token})
 }
 
 const crmLogin = async(req,res) => {
@@ -28,20 +33,22 @@ const crmLogin = async(req,res) => {
         throw new UnauthenticatedError('Invalid Credentials')
     }
     
-    res.status(200).json({user:{ name : user.name}, userId:user._id})   
+    const token = user.createJwt()
+
+    res.status(StatusCodes.OK).json({user:{ name : user.name}, token})   
     
 }
 
-const hugog_DevData = async(req,res) => {
-    res.json('hugog dev registration ')
-    console.log('hugog dev registration ')
-}
+// const hugog_DevData = async(req,res) => {
+//     res.json('hugog dev registration ')
+//     console.log('hugog dev registration ')
+// }
 
 module.exports = {
     crmRegister,
-    crmLogin,
-    crmData,
-    hugog_DevData
+    crmLogin
+    // crmData,
+    // hugog_DevData
 }
 
 
