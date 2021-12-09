@@ -1,0 +1,8 @@
+# BIZ-CRM-BE
+Back-END OF BIZ_CRM REACT APP
+
+env file 
+
+BIZ_CRM = ""
+JWT_SECRET  = ""
+JWT_LIFETIME = ""
